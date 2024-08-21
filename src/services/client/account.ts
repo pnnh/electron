@@ -1,5 +1,4 @@
 import {SessionModel} from '@/models/session'
-import {CommonResult} from '@/models/common-result'
 
 export function getLoginSession() {
     // const url = '/server/account/session'

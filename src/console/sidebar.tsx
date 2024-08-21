@@ -3,12 +3,11 @@ import styles from './sidebar.module.scss'
 import {useEffect, useState} from 'react'
 import {PLSelectResult} from '@/models/common-result'
 import {libraryAtom, notebookAtom} from './providers/notebook'
-import {LibraryModel} from '@/models/personal/library'
-import {useRecoilValue, useSetRecoilState} from 'recoil'
-import {sessionAtom} from './state/session'
-import {LibraryService} from '@/services/personal/library'
-import {NotebookService} from '@/services/personal/notebook'
+import {useRecoilState, useRecoilValue, useSetRecoilState} from 'recoil'
+import {selectLibraries} from '@/services/client/personal/library'
 import {NotebookModel} from '@/models/personal/notebook'
+import {selectNotebooks} from "@/services/client/personal/notebook";
+import {PSNotebookModel} from '@pnnh/polaris-business'
 
 export function NotebookBar() {
     return <div className={styles.sidebar}>
@@ -20,30 +19,25 @@ export function NotebookBar() {
 }
 
 function LibrarySelector() {
-    const [notebooks, setLibrarys] = useState<PLSelectResult<LibraryModel>>()
     const [notebookDropdown, setLibraryDropdown] = useState<boolean>(false)
-    const setLibrary = useSetRecoilState(libraryAtom)
-    const session = useRecoilValue(sessionAtom)
+    const [libraryState, setLibraryState] = useRecoilState(libraryAtom)
+
     useEffect(() => {
-        const loadData = async () => {
-            if (!session || !session.account || !session.account.uid) {
-                return
+        selectLibraries().then(selectResult => {
+            if (selectResult && selectResult.range && selectResult.range.length > 0) {
+                setLibraryState({
+                    models: selectResult.range,
+                    current: selectResult.range[0]
+                })
             }
-            const notebooks = await LibraryService.selectLibraries(session.account.uid, '')
-            console.log('selectLibrarys', notebooks)
-            setLibrarys(notebooks)
+        })
 
-            if (notebooks && notebooks.range && notebooks.range.length > 0) {
-                setLibrary(notebooks.range[0].uid)
-            }
-        }
-        loadData()
-    }, [session, setLibrary])
+    }, [])
 
-    if (!notebooks || !notebooks.range || notebooks.range.length <= 0) {
+    if (!libraryState || !libraryState.models || libraryState.models.length <= 0 || !libraryState.current) {
         return <div>暂无笔记本</div>
     }
-    const defaultLibrary = notebooks.range[0]
+    const defaultLibrary = libraryState.current
     return <>
         <div className={styles.notebookSelector}>
             <div className={styles.notebookTitle}>
@@ -61,10 +55,13 @@ function LibrarySelector() {
         {
             notebookDropdown && <div className={styles.notebookList}>
                 {
-                    notebooks && notebooks.range && notebooks.range.map(item => {
+                    libraryState.models.map(item => {
                         return <div key={item.uid} className={styles.notebookItem} onClick={() => {
                             setLibraryDropdown(!notebookDropdown)
-                            setLibrary(item.uid)
+                            setLibraryState({
+                                models: libraryState.models,
+                                current: item
+                            })
                         }}>
                             <span className={styles.notebookName}>{item.name}</span>
                         </div>
@@ -76,38 +73,42 @@ function LibrarySelector() {
 }
 
 function NotebookList() {
-
-    const [directories, setDirectories] = useState<PLSelectResult<NotebookModel>>()
-    const library = useRecoilValue(libraryAtom)
+    const libraryState = useRecoilValue(libraryAtom)
+    const [notebookState, setNotebookState] = useRecoilState(notebookAtom)
     useEffect(() => {
-        const loadData = async () => {
-            if (library) {
-                const directories = await NotebookService.selectNotebooks(library)
-                setDirectories(directories)
-            }
+        if (!libraryState.current || !libraryState.current.urn) {
+            return
         }
-        loadData()
-    }, [library])
+        selectNotebooks(libraryState.current.urn).then(selectResult => {
+            setNotebookState({
+                models: selectResult.range,
+                current: selectResult.range[0]
+            })
+        })
+    }, [libraryState])
 
-    if (!directories || !directories.range || directories.range.length <= 0) {
+    if (!notebookState || !notebookState.models || notebookState.models.length <= 0) {
         return <div>Empty</div>
     }
     return <div className={styles.directoryList}>
         {
-            directories.range.map(item => {
+            notebookState.models.map(item => {
                 return <NotebookCard key={item.uid} item={item}/>
             })
         }
     </div>
 }
 
-function NotebookCard({item}: { item: NotebookModel }) {
-    const setNotebook = useSetRecoilState(notebookAtom)
+function NotebookCard({item}: { item: PSNotebookModel }) {
+    const [notebookState, setNotebookState] = useRecoilState(notebookAtom)
     return <div className={styles.directoryCard}>
         <div className={styles.directorySelf}>
             <div className={styles.directoryName} onClick={() => {
                 console.debug('setLibrary', item.name)
-                setNotebook(item.uid)
+                setNotebookState({
+                    models: notebookState.models,
+                    current: item
+                })
             }}>
                 {item.title}</div>
         </div>

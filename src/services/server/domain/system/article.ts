@@ -1,15 +1,12 @@
 import fs from "node:fs";
 import frontMatter from "front-matter";
 import path from "path";
-import {stringToMd5} from "@/utils/basex";
+import {stringToMd5} from "@pnnh/atom";
 import {PSArticleFileModel, PSArticleModel} from "@/models/article";
-import {bulkInsertOrUpdateArticles} from "@/services/server/domain/system/database";
-import {openMainDatabase} from "@/services/server/database";
-import {createPaginationByPage} from "@/utils/pagination";
+import {createPaginationByPage} from "@pnnh/atom";
 import {PLSelectResult} from "@/models/common-result";
 import ignore from 'ignore'
-import {isText} from "istextorbinary";
-import {getType} from "@/utils/mime";
+import {getType} from "@pnnh/atom";
 
 const assetsIgnore = ignore().add(['.*', 'node_modules', 'dist', 'build', 'out', 'target', 'logs', 'logs/*', 'logs/**/*'])
 
@@ -110,26 +107,6 @@ export class SystemArticleService {
         return articles
     }
 
-    async selectArticlesFromDatabase(page: number, size: number): Promise<PLSelectResult<PSArticleModel>> {
-        const db = await openMainDatabase()
-        const {limit, offset} = createPaginationByPage(page, size)
-        const result = await db.all<PSArticleModel[]>(
-            `SELECT * FROM articles ORDER BY update_time DESC LIMIT :limit OFFSET :offset`, {
-                ':limit': limit,
-                ':offset': offset
-            })
-        const count = await db.get<{ total: number }>('SELECT COUNT(*) AS total FROM articles')
-        if (!count) {
-            throw new Error('查询count失败')
-        }
-        return {
-            range: result,
-            count: count.total,
-            page: page,
-            size: result.length
-        }
-    }
-
     async selectArticlesInChannel(channelName: string) {
         const channelPath = path.join(this.systemDomain, `${channelName}.chan`)
         const articles: PSArticleModel[] = await this.#scanArticlesInChannel(channelPath)
@@ -140,13 +117,7 @@ export class SystemArticleService {
             size: articles.length
         }
     }
-
-    // 由定时任务调用
-    async runtimeSyncArticles() {
-        const articles: PSArticleModel[] = await this.#scanArticles()
-        await bulkInsertOrUpdateArticles(articles)
-    }
-
+ 
     async selectArticles() {
         const articles: PSArticleModel[] = await this.#scanArticles()
         return {

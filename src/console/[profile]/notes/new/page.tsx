@@ -1,5 +1,3 @@
-'use client'
-
 import React from 'react'
 import {MarkdownEditorForm} from '../partials/edit'
 import {clientMakeHttpPut} from '@/services/client/http'

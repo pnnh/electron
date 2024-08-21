@@ -1,36 +1,34 @@
-'use client'
-
 import {useEffect, useState} from 'react'
 import styles from './notebar.module.scss'
 import {useRecoilValue, useSetRecoilState} from 'recoil'
 import {PLSelectResult} from '@/models/common-result'
-import {noteAtom, notebookAtom} from './providers/notebook'
-import {NoteService} from '@/services/personal/notes'
+import {libraryAtom, noteAtom, notebookAtom} from './providers/notebook'
 import {NoteModel} from '@/models/personal/note'
 import React from 'react'
+import {PSNoteModel} from '@pnnh/polaris-business'
+import {selectNotes, selectSubNotes} from "@/services/client/personal/notes";
 
 export function ConsoleNotebar() {
 
-    const [directories, setDirectories] = useState<PLSelectResult<NoteModel>>()
-    const notebook = useRecoilValue(notebookAtom)
+    const [notesResult, setNotesResult] = useState<PLSelectResult<PSNoteModel>>()
+    const libraryState = useRecoilValue(libraryAtom)
+    const notebookState = useRecoilValue(notebookAtom)
     useEffect(() => {
-        const loadData = async () => {
-            if (!notebook || notebook === '') {
-                return
-            }
-            const directories = await NoteService.selectNotes(notebook)
-            setDirectories(directories)
-
+        if (!libraryState || !libraryState.current || !libraryState.current.urn || !notebookState ||
+            !notebookState.current || !notebookState.current.urn) {
+            return
         }
-        loadData()
-    }, [notebook])
+        selectNotes(libraryState.current.urn, notebookState.current.urn).then(selectResult => {
+            setNotesResult(selectResult)
+        })
+    }, [notebookState])
 
-    if (!directories || !directories.range || directories.range.length <= 0) {
+    if (!notesResult || !notesResult.range || notesResult.range.length <= 0) {
         return <div>Empty</div>
     }
     return <div className={styles.noteList}>
         {
-            directories.range.map(item => {
+            notesResult.range.map(item => {
                 return <NoteCard key={item.uid} item={item}/>
             })
         }
@@ -45,7 +43,7 @@ function NoteCard({item}: { item: NoteModel }) {
 
     const loadData = async () => {
         if (hasChildren) {
-            const children = await NoteService.selectSubNotes(item.uid)
+            const children = await selectSubNotes(item.uid)
             setChildren(children)
         }
     }
@@ -68,8 +66,10 @@ function NoteCard({item}: { item: NoteModel }) {
                 }
             </div>
             <div className={styles.noteName} onClick={() => {
-                console.debug('setLibrary', item.name)
-                setNote(item.uid)
+                console.debug('setNote', item.name)
+                setNote({
+                    current: item
+                })
             }}>
                 {item.title}</div>
         </div>

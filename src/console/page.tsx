@@ -1,46 +1,32 @@
 import styles from './page.module.scss'
 import {NotebookBar} from './sidebar'
 import {ConsoleNotebar} from './notebar'
-import React, {useEffect, useState} from 'react'
+import React from 'react'
 import {useRecoilValue} from 'recoil'
 import {noteAtom} from './providers/notebook'
-import {NoteModel} from '@/models/personal/note'
-import {NoteService} from '@/services/personal/notes'
-import {NoteView} from "@/components/console/note";
 import {ConsoleLayout} from "@/console/layout";
+import {ArticleContainer} from "@/components/console/note";
 
 function MarkdownViewer() {
     const note = useRecoilValue(noteAtom)
-    const [model, setModel] = useState<NoteModel>()
 
-    useEffect(() => {
-        const loadResources = async () => {
-            if (!note) {
-                return
-            }
-            const response = await NoteService.getNoteByKey(note)
-            setModel(response)
-        }
-        loadResources()
-    }, [note])
-
-    if (!model || !model.body) {
+    if (!note || !note.current || !note.current.body) {
         return <div>Loading</div>
     }
 
     return <>
         <div className={styles.editorArea}>
             <div className={styles.editCol}>
-                <textarea value={model.body} readOnly></textarea>
+                <textarea value={note.current.body} readOnly></textarea>
             </div>
             <div className={styles.previewCol}>
-                <NoteView model={model}/>
+                <ArticleContainer tocList={[]} header={note.current.header} body={note.current.body} assetsUrl={'xxx'}/>
             </div>
         </div>
     </>
 }
 
-export function HomePage() {
+export function ConsolePage() {
 
     return (
         <ConsoleLayout>

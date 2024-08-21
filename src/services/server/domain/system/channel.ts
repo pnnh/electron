@@ -2,7 +2,7 @@ import {PSChannelModel} from "@/models/channel";
 import fs from "node:fs";
 import frontMatter from "front-matter";
 import path from "path";
-import {stringToMd5} from "@/utils/basex";
+import {stringToMd5} from "@pnnh/atom";
 
 export class SystemChannelService {
     systemDomain: string

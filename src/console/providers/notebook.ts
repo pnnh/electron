@@ -1,23 +1,40 @@
-import { atom } from 'recoil'
+import {atom} from 'recoil'
+import {PSLibraryModel, PSNotebookModel, PSNoteModel} from "@pnnh/polaris-business";
 
 const directoryAtom = atom({
-  key: 'directory',
-  default: ''
+    key: 'directoryAtom',
+    default: ''
 })
 
-const noteAtom = atom({
-  key: 'note',
-  default: ''
+const noteAtom = atom<{
+    current: PSNoteModel | undefined,
+}>({
+    key: 'noteAtom',
+    default: {
+        current: undefined,
+    }
 })
 
-const notebookAtom = atom({
-  key: 'notebook',
-  default: ''
+const notebookAtom = atom<{
+    models: PSNotebookModel[],
+    current: PSNotebookModel | undefined,
+}>({
+    key: 'notebookAtom',
+    default: {
+        models: [],
+        current: undefined,
+    }
 })
 
-const libraryAtom = atom({
-  key: 'library',
-  default: ''
+const libraryAtom = atom<{
+    models: PSLibraryModel[],
+    current: PSLibraryModel | undefined,
+}>({
+    key: 'libraryAtom',
+    default: {
+        models: [],
+        current: undefined,
+    }
 })
 
-export { noteAtom, directoryAtom, notebookAtom, libraryAtom }
+export {noteAtom, directoryAtom, notebookAtom, libraryAtom}

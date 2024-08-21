@@ -1,6 +1,7 @@
 import type {ConfigEnv, UserConfig} from 'vite';
 import {defineConfig, mergeConfig} from 'vite';
 import {getBuildConfig, getBuildDefine, external, pluginHotRestart} from './vite.base.config';
+import path from "node:path";
 
 export default defineConfig((env) => {
     const forgeEnv = env as ConfigEnv<'build'>;
@@ -21,6 +22,14 @@ export default defineConfig((env) => {
         define,
         resolve: {
             mainFields: ['module', 'jsnext:main', 'jsnext'],
+
+            alias: [{
+                find: "@",
+                replacement: path.resolve(__dirname, "./src")
+            }, {
+                find: "~",
+                replacement: path.resolve(__dirname, "./node_modules")
+            }]
         },
     };
 

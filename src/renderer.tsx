@@ -8,7 +8,7 @@ import {
     Route,
     Link,
 } from "react-router-dom";
-import {HomePage} from "./console/page";
+import {ConsolePage} from "./console/page";
 import {RecoilRoot} from "recoil";
 
 const router = createBrowserRouter([
@@ -28,7 +28,7 @@ const router = createBrowserRouter([
     },
     {
         path: "console",
-        element: <HomePage/>,
+        element: <ConsolePage/>,
     }
 ]);
 

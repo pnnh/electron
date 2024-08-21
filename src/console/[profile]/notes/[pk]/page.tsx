@@ -1,5 +1,3 @@
-'use client'
-
 import React, {useEffect, useState} from 'react'
 import {TocItem} from '@/models/common/article'
 import styles from './page.module.scss'

@@ -1,5 +1,3 @@
-'use client'
-
 import React, {useState} from 'react'
 import styles from './edit.module.scss'
 import {NoteModel} from "@/models/personal/note";
