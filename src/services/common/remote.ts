@@ -1,5 +1,5 @@
-import {IDomain} from "@/services/server/domain/domain";
 import parseURI from "parse-uri"
+import {IDomain} from "@/services/common/domain";
 
 export class RemoteDomain implements IDomain {
     userUri: parseURI.URI
