@@ -1,4 +1,4 @@
-import './index.scss';
+import './index.css';
 
 import * as React from "react";
 import {createRoot} from "react-dom/client";
@@ -10,24 +10,29 @@ import {
 } from "react-router-dom";
 import {ConsolePage} from "./console/page";
 import {RecoilRoot} from "recoil";
+import {WelcomePage} from "./welcome/welcome";
+import {NewPage} from "@/welcome/new";
+import {OpenPage} from "@/welcome/open";
 
 const router = createBrowserRouter([
     {
         path: "/",
-        element: (
-            <div>
-                <h1>Hello World</h1>
-                <Link to="about">About Us</Link>&nbsp;
-                <Link to="console">Console</Link>
-            </div>
-        ),
+        element: (<WelcomePage/>),
     },
     {
-        path: "about",
+        path: "/new",
+        element: <NewPage/>,
+    },
+    {
+        path: "/open",
+        element: <OpenPage/>,
+    },
+    {
+        path: "/about",
         element: <div>About</div>,
     },
     {
-        path: "console",
+        path: "/console",
         element: <ConsolePage/>,
     }
 ]);

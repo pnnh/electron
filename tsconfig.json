@@ -37,9 +37,6 @@
     "paths": {
       "@/*": [
         "src/*"
-      ],
-      "~/*": [
-        "node_modules/*"
       ]
     },
     "plugins": [
