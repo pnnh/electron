@@ -22,23 +22,23 @@ const styles = {
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
-        padding: 0.5rem 0;
         overflow-y: auto;
     `,
     notebookSelector: css`
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        padding: 4px 8px;
         background-color: #f2f2f2;
         border-bottom: solid 1px #e3e3e3;
-        height: 2.5rem;
+        height: 3rem;
     `,
     notebookTitle: css`
         display: flex;
         flex-direction: row;
-        align-items: flex-start;
+        align-items: center;
+        justify-items: center;
         gap: 4px;
+        padding: 0 0.5rem;
     `,
     notebookAction: css`
         display: flex;
@@ -46,12 +46,14 @@ const styles = {
         align-items: center;
         justify-content: center;
         gap: 6px;
+        padding: 0 0.5rem;
     `,
     notebookList: css`
         position: absolute;
-        background-color: #e0e0e0;
+        background-color: #F9F9F9;
         width: 100%;
-        top: 2.5rem;
+        height: calc(100vh - 3rem);
+        top: 3rem;
         font-size: 1rem;
         font-weight: 400;
         display: flex;
@@ -63,12 +65,13 @@ const styles = {
         flex-direction: row;
         align-items: center;
         justify-content: flex-start;
-        padding: 0.25rem 0.5rem;
+        height: 2.5rem;
+        padding: 0 0.5rem;
         gap: 0.5rem;
         cursor: pointer;
 
         &:hover {
-            background-color: #e4f7f9;
+            background-color: #DFDFDF;
         }
     `,
     notebookName: css`
@@ -82,7 +85,11 @@ const styles = {
         flex-direction: row;
         align-items: center;
         justify-content: flex-start;
-        height: 32px;
+        height: 2.5rem;
+
+        &:hover {
+            background-color: #DFDFDF;
+        }
     `,
     directoryName: css`
         border: none;
@@ -92,15 +99,25 @@ const styles = {
         cursor: pointer;
         width: auto;
         padding-left: 4px;
+    `,
+    libraryList: css`
+        height: calc(100vh - 6rem);
+    `,
+    newLibrary: css`
+        height: 3rem;
+        display: flex;
+        flex-direction: row;
+        justify-items: center;
+        align-items: center;
+        border-top: solid 1px #e3e3e3;
+        padding: 0 0.5rem;
     `
 }
 
 export function NotebookBar() {
     return <div className={styles.sidebar}>
         <LibrarySelector></LibrarySelector>
-        <div className={styles.directoryList}>
-            <NotebookList/>
-        </div>
+        <NotebookList/>
     </div>
 }
 
@@ -117,7 +134,6 @@ function LibrarySelector() {
                 })
             }
         })
-
     }, [])
 
     if (!libraryState || !libraryState.models || libraryState.models.length <= 0 || !libraryState.current) {
@@ -132,27 +148,28 @@ function LibrarySelector() {
                      onClick={() => setLibraryDropdown(!notebookDropdown)}></img>
             </div>
             <div className={styles.notebookAction}>
-                <img src='/icons/console/new-file-fill.png' alt='创建笔记' width={16} height={16} style={{
-                    width: '16px', height: '16px'
-                }}></img>
+                <img src='/icons/console/new-file-fill.png' alt='创建笔记' width={16} height={16}></img>
                 <img src='/icons/console/new-folder-fill.png' alt='创建目录' width={16} height={16}></img>
             </div>
         </div>
         {
             notebookDropdown && <div className={styles.notebookList}>
-                {
-                    libraryState.models.map(item => {
-                        return <div key={item.uid} className={styles.notebookItem} onClick={() => {
-                            setLibraryDropdown(!notebookDropdown)
-                            setLibraryState({
-                                models: libraryState.models,
-                                current: item
-                            })
-                        }}>
-                            <span className={styles.notebookName}>{item.name}</span>
-                        </div>
-                    })
-                }
+                <div className={styles.libraryList}>
+                    {
+                        libraryState.models.map(item => {
+                            return <div key={item.uid} className={styles.notebookItem} onClick={() => {
+                                setLibraryDropdown(!notebookDropdown)
+                                setLibraryState({
+                                    models: libraryState.models,
+                                    current: item
+                                })
+                            }}>
+                                <span className={styles.notebookName}>{item.name}</span>
+                            </div>
+                        })
+                    }
+                </div>
+                <div className={styles.newLibrary}>新增资料库</div>
             </div>
         }
     </>
@@ -190,7 +207,6 @@ function NotebookCard({item}: { item: PSNotebookModel }) {
     return <div>
         <div className={styles.directorySelf}>
             <div className={styles.directoryName} onClick={() => {
-                console.debug('setLibrary', item.name)
                 setNotebookState({
                     models: notebookState.models,
                     current: item

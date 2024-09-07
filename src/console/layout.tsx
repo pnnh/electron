@@ -26,24 +26,21 @@ const consolePage = css`
     height: 100vh;
 `
 const leftNav = css`
-
-    width: 2.5rem;
+    width: 3rem;
     position: absolute;
     left: 0;
     height: 100%;
 `
 const rightBody = css`
-
     position: absolute;
-    left: 2.5rem;
-    width: calc(100vw - 2.5rem);
-    height: calc(200vh - 2.5rem);
+    left: 3rem;
+    width: calc(100vw - 3rem);
+    height: 100vh;
     background: #FFFFFF;
 `
 
 const mainContainer = css`
-
-    height: calc(100vh - 2.5rem);
+    height: calc(100vh - 3rem);
 `
 const navbar = css`
     height: 40px;
