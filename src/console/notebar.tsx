@@ -1,5 +1,4 @@
 import {useEffect, useState} from 'react'
-import styles from './notebar.module.scss'
 import {useRecoilValue, useSetRecoilState} from 'recoil'
 import {PLSelectResult} from '@/models/common-result'
 import {libraryAtom, noteAtom, notebookAtom} from './providers/notebook'
@@ -7,9 +6,9 @@ import {NoteModel} from '@/models/personal/note'
 import React from 'react'
 import {PSNoteModel} from '@pnnh/polaris-business'
 import {selectNotes, selectSubNotes} from "@/services/client/personal/notes";
+import {css} from "@emotion/css";
 
 export function ConsoleNotebar() {
-
     const [notesResult, setNotesResult] = useState<PLSelectResult<PSNoteModel>>()
     const libraryState = useRecoilValue(libraryAtom)
     const notebookState = useRecoilValue(notebookAtom)
@@ -81,4 +80,35 @@ function NoteCard({item}: { item: NoteModel }) {
             }
         </div>
     </div>
+}
+
+const styles = {
+    noteCard: css`
+        padding-left: 1rem;
+    `,
+    noteList: css`
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem 1rem 1rem 0;
+    `,
+    noteSelf: css`
+        display: flex;
+        flex-direction: row;
+    `,
+    noteOpen: css`
+        width: 36px;
+        height: 36px;
+        flex-shrink: 0;
+
+    `,
+    noteName: css`
+        font-size: 1rem;
+        font-weight: 500;
+        line-height: 1.4;
+        color: #000;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    `
 }

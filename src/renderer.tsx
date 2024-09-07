@@ -17,7 +17,7 @@ import {OpenPage} from "@/welcome/open";
 const router = createBrowserRouter([
     {
         path: "/",
-        element: (<WelcomePage/>),
+        element: (<ConsolePage/>),
     },
     {
         path: "/new",

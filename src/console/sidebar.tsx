@@ -1,13 +1,99 @@
 import React from 'react'
-import styles from './sidebar.module.scss'
 import {useEffect, useState} from 'react'
-import {PLSelectResult} from '@/models/common-result'
 import {libraryAtom, notebookAtom} from './providers/notebook'
-import {useRecoilState, useRecoilValue, useSetRecoilState} from 'recoil'
+import {useRecoilState, useRecoilValue} from 'recoil'
 import {selectLibraries} from '@/services/client/personal/library'
-import {NotebookModel} from '@/models/personal/notebook'
 import {selectNotebooks} from "@/services/client/personal/notebook";
 import {PSNotebookModel} from '@pnnh/polaris-business'
+import {css} from "@emotion/css";
+
+const styles = {
+    sidebar: css`
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+        background-color: #f9f9f9;
+        border-right: solid 1px #e3e3e3;
+        overflow: hidden;
+        position: relative;
+    `,
+    directoryList: css`
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 0.5rem 0;
+        overflow-y: auto;
+    `,
+    notebookSelector: css`
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 4px 8px;
+        background-color: #f2f2f2;
+        border-bottom: solid 1px #e3e3e3;
+        height: 2.5rem;
+    `,
+    notebookTitle: css`
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 4px;
+    `,
+    notebookAction: css`
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+    `,
+    notebookList: css`
+        position: absolute;
+        background-color: #e0e0e0;
+        width: 100%;
+        top: 2.5rem;
+        font-size: 1rem;
+        font-weight: 400;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    `,
+    notebookItem: css`
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 0.25rem 0.5rem;
+        gap: 0.5rem;
+        cursor: pointer;
+
+        &:hover {
+            background-color: #e4f7f9;
+        }
+    `,
+    notebookName: css`
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.6;
+        color: #000;
+    `,
+    directorySelf: css`
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        height: 32px;
+    `,
+    directoryName: css`
+        border: none;
+        background-color: transparent;
+        padding: 0;
+        margin: 0;
+        cursor: pointer;
+        width: auto;
+        padding-left: 4px;
+    `
+}
 
 export function NotebookBar() {
     return <div className={styles.sidebar}>
@@ -101,7 +187,7 @@ function NotebookList() {
 
 function NotebookCard({item}: { item: PSNotebookModel }) {
     const [notebookState, setNotebookState] = useRecoilState(notebookAtom)
-    return <div className={styles.directoryCard}>
+    return <div>
         <div className={styles.directorySelf}>
             <div className={styles.directoryName} onClick={() => {
                 console.debug('setLibrary', item.name)
