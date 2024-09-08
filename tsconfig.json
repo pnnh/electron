@@ -11,9 +11,11 @@
     "outDir": "dist",
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "jsx": "react",
+    "jsx": "react-jsx",
+    "jsxImportSource": "@emotion/react",
     "types": [
-      "node"
+      "node",
+      "@emotion/core"
     ],
     "typeRoots": [
       "node_modules/@types",

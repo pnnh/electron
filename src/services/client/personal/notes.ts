@@ -1,5 +1,6 @@
 import {PLSelectResult, PSNoteModel} from "@pnnh/polaris-business";
 import {clientSigninDomain} from "@/services/client/domain";
+import {openDatabase} from "@/services/client/database";
 
 export async function selectNotes(libraryUrn: string, notebookUrn: string, queryString: string = '') {
     const domain = await clientSigninDomain()
@@ -7,16 +8,30 @@ export async function selectNotes(libraryUrn: string, notebookUrn: string, query
     return await domain.makeGet<PLSelectResult<PSNoteModel>>(url)
 }
 
-export async function getNoteByKey(pk: string) {
-    // const url = '/server/console/notes/' + pk
-    // const response = await axios.get<NoteModel>(url)
-    // return response.data
-    return {} as PSNoteModel
+interface DatabaseArticleItem {
+    article: PSNoteModel;
+    timestamp: number;
 }
 
-export async function selectSubNotes(parent: string, queryString: string = '') {
-    // const url = `/server/console/notes/${parent}/notes?${queryString}`
-    // const response = await axios.get<PLSelectResult<NoteModel>>(url)
-    // return response.data
-    return {} as PLSelectResult<PSNoteModel>
+export async function storeArticleToDatabase(article: PSNoteModel) {
+    const db = await openDatabase('articles', 1);
+    const tx = db.transaction('keyVal', 'readwrite');
+    const store = tx.objectStore('keyVal');
+
+    const dbKey = 'article-' + article.urn;
+    const nowValue = await store.get(dbKey) as DatabaseArticleItem;
+    const nowDate = new Date();
+
+    const newValue: DatabaseArticleItem = {
+        article: article,
+        timestamp: nowDate.getTime(),
+    };
+    await store.put(newValue, dbKey);
+    await tx.done;
+    if (nowValue) {
+        if (nowValue.timestamp <= nowDate.getTime() - 1000) {
+            // 每一秒向服务端同步一次文章状态
+            await window.serverAPI.storeArticle(article)
+        }
+    }
 }

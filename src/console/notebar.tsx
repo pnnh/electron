@@ -5,7 +5,7 @@ import {libraryAtom, noteAtom, notebookAtom} from './providers/notebook'
 import {NoteModel} from '@/models/personal/note'
 import React from 'react'
 import {PSNoteModel} from '@pnnh/polaris-business'
-import {selectNotes, selectSubNotes} from "@/services/client/personal/notes";
+import {selectNotes} from "@/services/client/personal/notes";
 import {css} from "@emotion/css";
 
 export function ConsoleNotebar() {

@@ -5,6 +5,8 @@ export interface IDomain {
     makeGet<T>(url: string): Promise<T>
 
     makePost<T>(url: string, params: unknown): Promise<T>
+
+    makePut<T>(url: string, params: unknown): Promise<T>
 }
 
 export async function trySigninDomain(domainUrl: string): Promise<IDomain | undefined> {
@@ -12,3 +14,4 @@ export async function trySigninDomain(domainUrl: string): Promise<IDomain | unde
     remoteUri = parseUri(domainUrl)
     return new RemoteDomain(remoteUri)
 }
+

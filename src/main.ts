@@ -1,6 +1,7 @@
 import {app, BrowserWindow, ipcMain} from 'electron';
 import path from 'path';
 import {serverGetAppConfig} from "@/services/server/config";
+import {serverStoreArticle} from "@/services/server/article";
 
 if (require('electron-squirrel-startup')) {
     app.quit();
@@ -28,6 +29,7 @@ const createWindow = () => {
 
 app.on('ready', () => {
     ipcMain.handle('getAppConfig', serverGetAppConfig)
+    ipcMain.handle('storeArticle', serverStoreArticle)
     createWindow()
 });
 

@@ -38,4 +38,18 @@ export class RemoteDomain implements IDomain {
         })
         return response.json()
     }
+
+    async makePut<T>(url: string, params: unknown): Promise<T> {
+        url = this.baseUrl + url
+        const response = await fetch(url, {
+            credentials: 'include',
+            method: 'PUT',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(params),
+        })
+        return response.json()
+    }
 }

@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import {TocItem} from '@/models/common/article'
 import styles from './page.module.scss'
 import {BuildBodyHtml} from '@/components/common/article'
-import {generatorRandomString} from "@/utils/string";
+import {generatorRandomString} from "@/services/client/utils/string";
 import {clientMakeHttpGet} from '@/services/client/http'
 import {NoteModel} from "@/models/personal/note";
 import {Button} from "@mui/material";
