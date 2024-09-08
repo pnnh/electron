@@ -37,13 +37,13 @@ export function ConsoleNotebar() {
 function NoteCard({item}: { item: NoteModel }) {
     const setNote = useSetRecoilState(noteAtom)
 
-    return <div className={styles.noteCard}>
+    return <div className={styles.noteCard} onClick={() => {
+        setNote({
+            current: item
+        })
+    }}>
         <div className={styles.noteSelf}>
-            <div className={styles.noteName} onClick={() => {
-                setNote({
-                    current: item
-                })
-            }}>
+            <div className={styles.noteName}>
                 {item.title}</div>
         </div>
     </div>
@@ -64,6 +64,11 @@ const styles = {
         gap: 1rem;
         align-items: center;
         padding-left: 1rem;
+        cursor: default;
+
+        &:hover {
+            background-color: #f3f3f3;
+        }
     `,
     noteSelf: css`
         display: flex;
@@ -71,8 +76,6 @@ const styles = {
     `,
     noteName: css`
         font-size: 1rem;
-        font-weight: 500;
-        line-height: 1.4;
         color: #000;
         overflow: hidden;
         text-overflow: ellipsis;

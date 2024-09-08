@@ -18,11 +18,15 @@ const styles = {
         overflow: hidden;
         position: relative;
     `,
-    directoryList: css`
+    notebookContainer: css`
+        height: calc(100vh - 3rem);
+    `,
+    notebookList: css`
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
         overflow-y: auto;
+        height: calc(100vh - 6rem);
     `,
     notebookSelector: css`
         display: flex;
@@ -48,7 +52,7 @@ const styles = {
         gap: 6px;
         padding: 0 0.5rem;
     `,
-    notebookList: css`
+    libraryContainer: css`
         position: absolute;
         background-color: #F9F9F9;
         width: 100%;
@@ -68,7 +72,7 @@ const styles = {
         height: 2.5rem;
         padding: 0 0.5rem;
         gap: 0.5rem;
-        cursor: pointer;
+        cursor: default;
 
         &:hover {
             background-color: #DFDFDF;
@@ -86,6 +90,7 @@ const styles = {
         align-items: center;
         justify-content: flex-start;
         height: 2.5rem;
+        cursor: default;
 
         &:hover {
             background-color: #DFDFDF;
@@ -96,7 +101,7 @@ const styles = {
         background-color: transparent;
         padding: 0;
         margin: 0;
-        cursor: pointer;
+        cursor: default;
         width: auto;
         padding-left: 4px;
     `,
@@ -104,6 +109,15 @@ const styles = {
         height: calc(100vh - 6rem);
     `,
     newLibrary: css`
+        height: 3rem;
+        display: flex;
+        flex-direction: row;
+        justify-items: center;
+        align-items: center;
+        border-top: solid 1px #e3e3e3;
+        padding: 0 0.5rem;
+    `,
+    newNotebook: css`
         height: 3rem;
         display: flex;
         flex-direction: row;
@@ -153,7 +167,7 @@ function LibrarySelector() {
             </div>
         </div>
         {
-            notebookDropdown && <div className={styles.notebookList}>
+            notebookDropdown && <div className={styles.libraryContainer}>
                 <div className={styles.libraryList}>
                     {
                         libraryState.models.map(item => {
@@ -193,25 +207,28 @@ function NotebookList() {
     if (!notebookState || !notebookState.models || notebookState.models.length <= 0) {
         return <div>Empty</div>
     }
-    return <div className={styles.directoryList}>
-        {
-            notebookState.models.map(item => {
-                return <NotebookCard key={item.uid} item={item}/>
-            })
-        }
+    return <div className={styles.notebookContainer}>
+        <div className={styles.notebookList}>
+            {
+                notebookState.models.map(item => {
+                    return <NotebookCard key={item.uid} item={item}/>
+                })
+            }
+        </div>
+        <div className={styles.newNotebook}>新增笔记本</div>
     </div>
 }
 
 function NotebookCard({item}: { item: PSNotebookModel }) {
     const [notebookState, setNotebookState] = useRecoilState(notebookAtom)
     return <div>
-        <div className={styles.directorySelf}>
-            <div className={styles.directoryName} onClick={() => {
-                setNotebookState({
-                    models: notebookState.models,
-                    current: item
-                })
-            }}>
+        <div className={styles.directorySelf} onClick={() => {
+            setNotebookState({
+                models: notebookState.models,
+                current: item
+            })
+        }}>
+            <div className={styles.directoryName}>
                 {item.title}</div>
         </div>
     </div>
