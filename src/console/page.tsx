@@ -6,51 +6,56 @@ import {noteAtom} from './providers/notebook'
 import {ConsoleLayout} from "@/console/layout";
 import {ArticleContainer} from "@/components/console/note";
 import {css} from "@emotion/css";
+import {consoleTheme} from "@/console/theme";
 
 const styles = {
     editorArea: css`
         height: 100%;
     `,
     editCol: css`
-        border-right: solid 1px #e3e3e3;
         height: 50%;
+        border-bottom: solid 1px #e3e3e3;
+        overflow-x: hidden;
+        scrollbar-width: thin;
+        padding: 1rem;
     `,
-    editArea: css`
+    editText: css`
         border: 0;
         box-shadow: none;
         resize: none;
         outline: none !important;
-        overflow-y: auto;
-        height: 100%;
-        width: 100%;
+        overflow-y: hidden;
     `,
     previewCol: css`
         height: 50%;
         overflow-y: scroll;
         overflow-x: hidden;
         box-sizing: border-box;
+        scrollbar-width: thin;
+        padding: 1rem;
+    `,
+    notesContainer: css`
+        position: absolute;
+        left: 15rem;
+        width: calc(100vw - ${consoleTheme.featureBarWidth + consoleTheme.notebookBarWidth}rem);
+        height: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
     `,
     noteViewer: css`
         position: absolute;
-        left: 50%;
-        width: 50%;
-        padding: 1rem;
+        left: 20rem;
+        width: calc(100% - 20rem);
         height: 100%;
     `,
     notebarContainer: css`
         position: absolute;
         left: 0;
-        width: 50%;
+        width: 20rem;
         overflow-y: auto;
         overflow-x: hidden;
-    `,
-    notesContainer: css`
-        position: absolute;
-        left: 15rem;
-        width: calc(100vw - 17.5rem);
-        height: calc(100vh - 2.5rem);
-        display: grid;
-        grid-template-columns: 1fr 1fr;
+        border-right: solid 1px #e3e3e3;
+        height: 100%;
     `,
     directoryBar: css`
         width: 15rem;
@@ -70,7 +75,7 @@ function MarkdownViewer() {
     return <>
         <div className={styles.editorArea}>
             <div className={styles.editCol}>
-                <textarea className={styles.editArea} value={note.current.body} readOnly></textarea>
+                <div contentEditable={true} className={styles.editText}>{note.current.body}</div>
             </div>
             <div className={styles.previewCol}>
                 <ArticleContainer tocList={[]} header={note.current.header} body={note.current.body} assetsUrl={'xxx'}/>
@@ -80,21 +85,17 @@ function MarkdownViewer() {
 }
 
 export function ConsolePage() {
-
     return (
         <ConsoleLayout>
-            <div>
-                <div className={styles.directoryBar}>
-                    <NotebookBar></NotebookBar>
+            <div className={styles.directoryBar}>
+                <NotebookBar></NotebookBar>
+            </div>
+            <div className={styles.notesContainer}>
+                <div className={styles.notebarContainer}>
+                    <ConsoleNotebar></ConsoleNotebar>
                 </div>
-                <div className={styles.notesContainer}>
-                    <div className={styles.notebarContainer}>
-                        <ConsoleNotebar></ConsoleNotebar>
-                    </div>
-                    <div className={styles.noteViewer}>
-                        <MarkdownViewer></MarkdownViewer>
-                    </div>
-
+                <div className={styles.noteViewer}>
+                    <MarkdownViewer></MarkdownViewer>
                 </div>
             </div>
         </ConsoleLayout>

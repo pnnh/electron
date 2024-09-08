@@ -16,29 +16,22 @@ html, body {
 }
 
 /* 约是移动手机尺寸 */
-@media (max-width: 20em) {
+@media (max-width: 40em) {
     html, body {
         font-size: 14px !important;
-    }
-}
-
-/* 约是平板电脑尺寸 */
-@media (min-width: 20em) and (max-width: 40em) {
-    html, body {
-        font-size: 15px !important;
     }
 }
 
 /* 约是笔记本电脑尺寸 */
 @media (min-width: 40em) {
     html, body {
-        font-size: 16px !important;
+        font-size: 15px !important;
     }
 }
 
 /* 约是大屏幕尺寸 */
-@media (min-width: 80em) {
+@media (min-width: 100em) {
     html, body {
-        font-size: 17px !important;
+        font-size: 16px !important;
     }
 }

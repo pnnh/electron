@@ -35,72 +35,39 @@ export function ConsoleNotebar() {
 }
 
 function NoteCard({item}: { item: NoteModel }) {
-    const [isExpanded, setIsExpanded] = useState<boolean>(false)
-    const hasChildren = Boolean(item.children) && item.children > 0
     const setNote = useSetRecoilState(noteAtom)
-    const [children, setChildren] = useState<PLSelectResult<NoteModel>>()
 
-    const loadData = async () => {
-        if (hasChildren) {
-            const children = await selectSubNotes(item.uid)
-            setChildren(children)
-        }
-    }
     return <div className={styles.noteCard}>
         <div className={styles.noteSelf}>
-            <div className={styles.noteOpen} onClick={() => {
-                setIsExpanded(!isExpanded)
-                if (isExpanded) {
-                    setChildren(undefined)
-                } else {
-                    loadData()
-                }
-            }
-            }>
-                {
-                    hasChildren &&
-                    <img
-                        src={isExpanded ? '/icons/console/triangle-down-fill.png' : '/icons/console/triangle-right-fill.png'}
-                        alt='目录' width={24} height={24} style={{width: '24px', height: '24px'}}></img>
-                }
-            </div>
             <div className={styles.noteName} onClick={() => {
-                console.debug('setNote', item.name)
                 setNote({
                     current: item
                 })
             }}>
                 {item.title}</div>
         </div>
-        <div style={{display: isExpanded ? 'block' : 'none'}}>
-            {
-                children && children.range.map(child => {
-                    return <NoteCard key={child.uid} item={child}/>
-                })
-            }
-        </div>
     </div>
 }
 
 const styles = {
-    noteCard: css`
-        padding-left: 1rem;
-    `,
     noteList: css`
         display: flex;
         flex-direction: column;
+        gap: 0.5rem;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+    `,
+    noteCard: css`
+        height: 2rem;
+        display: flex;
+        flex-direction: row;
         gap: 1rem;
-        padding: 1rem 1rem 1rem 0;
+        align-items: center;
+        padding-left: 1rem;
     `,
     noteSelf: css`
         display: flex;
         flex-direction: row;
-    `,
-    noteOpen: css`
-        width: 36px;
-        height: 36px;
-        flex-shrink: 0;
-
     `,
     noteName: css`
         font-size: 1rem;
