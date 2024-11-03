@@ -1,11 +1,9 @@
 import React, {useEffect, useState} from 'react'
-import {TocItem} from '@/models/common/article'
-import styles from './page.module.scss'
-import {BuildBodyHtml} from '@/components/common/article'
-import {generatorRandomString} from "@/services/client/utils/string";
 import {clientMakeHttpGet} from '@/services/client/http'
-import {NoteModel} from "@/models/personal/note";
-import {Button} from "@mui/material";
+import {NoteModel} from "@pnnh/polaris-business";
+import {TocItem} from "@pnnh/stele";
+import {generatorRandomString} from "@pnnh/atom";
+import {BuildBodyHtml} from "@pnnh/stele/server";
 
 interface IReadRequest {
     params: { pk: string }
@@ -29,14 +27,14 @@ export default function Page(request: IReadRequest) {
     const tocList: TocItem[] = []
     const titleId = generatorRandomString(8)
     tocList.push({title: model.title, header: 0, id: titleId})
-    return <div className={styles.viewPage}>
-        <div className={styles.toolbar}>
-            <Button>编辑</Button>
-            <Button>分享</Button>
-            <Button>删除</Button>
+    return <div className={'viewPage'}>
+        <div className={'toolbar'}>
+            <button>编辑</button>
+            <button>分享</button>
+            <button>删除</button>
         </div>
-        <div className={styles.content}>
-            <BuildBodyHtml assetsUrl={''} tocList={tocList} header={model.header} body={model.body}/>
+        <div className={'content'}>
+            <BuildBodyHtml libUrl={''} assetsUrl={''} tocList={tocList} header={model.header} body={model.body}/>
         </div>
     </div>
 }

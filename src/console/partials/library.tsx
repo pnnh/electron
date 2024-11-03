@@ -2,129 +2,8 @@ import React from 'react'
 import {useEffect, useState} from 'react'
 import {useRecoilState, useRecoilValue} from 'recoil'
 import {selectLibraries} from '@/services/client/personal/library'
-import {css} from "@emotion/css";
+import './library.scss'
 import {libraryAtom} from "@/console/providers/notebook";
-
-const styles = {
-    sidebar: css`
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        height: 100%;
-        background-color: #f9f9f9;
-        border-right: solid 1px #e3e3e3;
-        overflow: hidden;
-        position: relative;
-    `,
-    notebookContainer: css`
-        height: calc(100vh - 3rem);
-    `,
-    notebookList: css`
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-        overflow-y: auto;
-        height: calc(100vh - 6rem);
-    `,
-    notebookSelector: css`
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        background-color: #f2f2f2;
-        border-bottom: solid 1px #e3e3e3;
-        height: 3rem;
-    `,
-    notebookTitle: css`
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-items: center;
-        gap: 4px;
-        padding: 0 0.5rem;
-    `,
-    notebookAction: css`
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        gap: 6px;
-        padding: 0 0.5rem;
-    `,
-    libraryContainer: css`
-        position: absolute;
-        background-color: #F9F9F9;
-        width: 100%;
-        height: calc(100vh - 3rem);
-        top: 3rem;
-        font-size: 1rem;
-        font-weight: 400;
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-    `,
-    notebookItem: css`
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: flex-start;
-        height: 2.5rem;
-        padding: 0 0.5rem;
-        gap: 0.5rem;
-        cursor: default;
-
-        &:hover {
-            background-color: #DFDFDF;
-        }
-    `,
-    notebookName: css`
-        font-size: 1rem;
-        font-weight: 400;
-        line-height: 1.6;
-        color: #000;
-    `,
-    directorySelf: css`
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: flex-start;
-        height: 2.5rem;
-        cursor: default;
-
-        &:hover {
-            background-color: #DFDFDF;
-        }
-    `,
-    directoryName: css`
-        border: none;
-        background-color: transparent;
-        padding: 0;
-        margin: 0;
-        cursor: default;
-        width: auto;
-        padding-left: 4px;
-    `,
-    libraryList: css`
-        height: calc(100vh - 6rem);
-    `,
-    newLibrary: css`
-        height: 3rem;
-        display: flex;
-        flex-direction: row;
-        justify-items: center;
-        align-items: center;
-        border-top: solid 1px #e3e3e3;
-        padding: 0 0.5rem;
-    `,
-    newNotebook: css`
-        height: 3rem;
-        display: flex;
-        flex-direction: row;
-        justify-items: center;
-        align-items: center;
-        border-top: solid 1px #e3e3e3;
-        padding: 0 0.5rem;
-    `
-}
 
 export function LibrarySelector() {
     const [notebookDropdown, setLibraryDropdown] = useState<boolean>(false)
@@ -146,35 +25,35 @@ export function LibrarySelector() {
     }
     const defaultLibrary = libraryState.current
     return <>
-        <div className={styles.notebookSelector}>
-            <div className={styles.notebookTitle}>
+        <div className={'notebookSelector'}>
+            <div className={'notebookTitle'}>
                 <span>{defaultLibrary.name}</span>
                 <img src='/icons/console/down-arrow.png' alt='选择笔记本' width={24} height={24}
                      onClick={() => setLibraryDropdown(!notebookDropdown)}></img>
             </div>
-            <div className={styles.notebookAction}>
+            <div className={'notebookAction'}>
                 <img src='/icons/console/new-file-fill.png' alt='创建笔记' width={16} height={16}></img>
                 <img src='/icons/console/new-folder-fill.png' alt='创建目录' width={16} height={16}></img>
             </div>
         </div>
         {
-            notebookDropdown && <div className={styles.libraryContainer}>
-                <div className={styles.libraryList}>
+            notebookDropdown && <div className={'libraryContainer'}>
+                <div className={'libraryList'}>
                     {
                         libraryState.models.map(item => {
-                            return <div key={item.uid} className={styles.notebookItem} onClick={() => {
+                            return <div key={item.urn} className={'notebookItem'} onClick={() => {
                                 setLibraryDropdown(!notebookDropdown)
                                 setLibraryState({
                                     models: libraryState.models,
                                     current: item
                                 })
                             }}>
-                                <span className={styles.notebookName}>{item.name}</span>
+                                <span className={'notebookName'}>{item.name}</span>
                             </div>
                         })
                     }
                 </div>
-                <div className={styles.newLibrary}>新增资料库</div>
+                <div className={'newLibrary'}>新增资料库</div>
             </div>
         }
     </>

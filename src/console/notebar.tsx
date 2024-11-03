@@ -1,12 +1,10 @@
 import {useEffect, useState} from 'react'
 import {useRecoilValue, useSetRecoilState} from 'recoil'
-import {PLSelectResult} from '@/models/common-result'
 import {libraryAtom, noteAtom, notebookAtom} from './providers/notebook'
-import {NoteModel} from '@/models/personal/note'
 import React from 'react'
-import {PSNoteModel} from '@pnnh/polaris-business'
+import {PSNoteModel, PLSelectResult} from '@pnnh/polaris-business'
 import {selectNotes} from "@/services/client/personal/notes";
-import {css} from "@emotion/css";
+import './notebar.scss'
 
 export function ConsoleNotebar() {
     const [notesResult, setNotesResult] = useState<PLSelectResult<PSNoteModel>>()
@@ -25,60 +23,26 @@ export function ConsoleNotebar() {
     if (!notesResult || !notesResult.range || notesResult.range.length <= 0) {
         return <div>Empty</div>
     }
-    return <div className={styles.noteList}>
+    return <div className={'noteList'}>
         {
             notesResult.range.map(item => {
-                return <NoteCard key={item.uid} item={item}/>
+                return <NoteCard key={item.urn} item={item}/>
             })
         }
     </div>
 }
 
-function NoteCard({item}: { item: NoteModel }) {
+function NoteCard({item}: { item: PSNoteModel }) {
     const setNote = useSetRecoilState(noteAtom)
 
-    return <div className={styles.noteCard} onClick={() => {
+    return <div className={'noteCard'} onClick={() => {
         setNote({
             current: item
         })
     }}>
-        <div className={styles.noteSelf}>
-            <div className={styles.noteName}>
+        <div className={'noteSelf'}>
+            <div className={'noteName'}>
                 {item.title}</div>
         </div>
     </div>
-}
-
-const styles = {
-    noteList: css`
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-        padding-top: 0.5rem;
-        padding-bottom: 0.5rem;
-    `,
-    noteCard: css`
-        height: 2rem;
-        display: flex;
-        flex-direction: row;
-        gap: 1rem;
-        align-items: center;
-        padding-left: 1rem;
-        cursor: default;
-
-        &:hover {
-            background-color: #f3f3f3;
-        }
-    `,
-    noteSelf: css`
-        display: flex;
-        flex-direction: row;
-    `,
-    noteName: css`
-        font-size: 1rem;
-        color: #000;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    `
 }

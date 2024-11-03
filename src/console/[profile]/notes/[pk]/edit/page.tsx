@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import {MarkdownEditorForm} from '../../partials/edit'
 import {clientMakeHttpGet, clientMakeHttpPut} from '@/services/client/http'
-import {NoteModel} from "@/models/personal/note";
+import { NoteModel } from '@pnnh/polaris-business'
 
 interface IReadRequest {
     params: { pk: string }
@@ -30,7 +30,7 @@ export default function Page(request: IReadRequest) {
 
         clientMakeHttpPut<NoteModel>('/restful/article', newModel).then((result) => {
             console.debug('result', result)
-            if (result && result.uid) {
+            if (result && result.urn) {
                 // router.replace('/console/articles')
                 // router.refresh()
             }
