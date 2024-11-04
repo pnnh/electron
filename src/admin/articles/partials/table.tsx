@@ -1,15 +1,13 @@
 'use client'
 
 import {formatRfc3339} from '@pnnh/atom'
-import styles from './table.module.scss'
+import './table.scss'
 import React from 'react'
-import Link from 'next/link'
 import {PLSelectResult} from '@pnnh/polaris-business'
 import {PaginationPartial} from '@pnnh/atom-react/client'
 import {replaceSearchParams} from '@pnnh/atom'
 import {calcPagination} from "@pnnh/atom";
 import {channelName, PSArticleModel} from "@pnnh/polaris-business";
-import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
 
 export function ArticleTable(props: {
     result: PLSelectResult<PSArticleModel>,
@@ -18,30 +16,30 @@ export function ArticleTable(props: {
     const result = props.result
     const pagination = calcPagination(result.page, result.count, result.size)
     return <>
-        <TableContainer className={styles.tableContainer}>
-            <Table className={styles.articleTable}>
-                <TableHead>
-                    <TableRow>
-                        <TableCell className={styles.columnCheck}>
-                            <label>
-                                <input type="checkbox" className="checkbox"/>
-                            </label>
-                        </TableCell>
-                        <TableCell>文章</TableCell>
-                        <TableCell>频道</TableCell>
-                        <TableCell className={styles.columnTime}>修改时间</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {
-                        props.result.range.map((item, index) => {
-                            return <ArticleTableRow key={index} model={item}/>
-                        })
-                    }
+        <div className={'tableContainer'}>
+            <table className={'articleTable'}>
+                <thead>
+                <tr>
+                    <th className={'columnCheck'}>
+                        <label>
+                            <input type="checkbox" className="checkbox"/>
+                        </label>
+                    </th>
+                    <th>文章</th>
+                    <th>频道</th>
+                    <th className={'columnTime'}>修改时间</th>
+                </tr>
+                </thead>
+                <tbody>
+                {
+                    props.result.range.map((item, index) => {
+                        return <ArticleTableRow key={index} model={item}/>
+                    })
+                }
 
-                </TableBody>
-            </Table>
-        </TableContainer>
+                </tbody>
+            </table>
+        </div>
         <PaginationPartial pagination={pagination}
                            calcUrl={(page) => replaceSearchParams(props.search, 'page', page.toString())}/>
 
@@ -50,20 +48,20 @@ export function ArticleTable(props: {
 
 function ArticleTableRow({model}: { model: PSArticleModel }) {
     const updateTimeString = formatRfc3339(model.update_time)
-    return <TableRow className={styles.articleRow}>
-        <TableCell>
+    return <tr className={'articleRow'}>
+        <td>
             <label>
                 <input type="checkbox" className="checkbox"/>
             </label>
-        </TableCell>
-        <TableCell className={styles.articleTitle}>
+        </td>
+        <td className={'articleTitle'}>
             {model.title}
-        </TableCell>
-        <TableCell className={styles.channelTitle}>
-            <Link href={'/'}>{channelName(model.channel)}</Link>
-        </TableCell>
-        <TableCell>
+        </td>
+        <td className={'channelTitle'}>
+            <a href={'/'}>{channelName(model.channel)}</a>
+        </td>
+        <td>
             {updateTimeString}
-        </TableCell>
-    </TableRow>
+        </td>
+    </tr>
 }

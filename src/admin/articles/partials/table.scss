@@ -12,12 +12,6 @@
     .columnTime {
       width: 160px;
     }
-
-    .actionCol {
-      :global(.fui-MenuButton__menuIcon) {
-        display: contents;
-      }
-    }
   }
 }
 

@@ -1,64 +1,62 @@
 'use client'
 
 import {formatRfc3339} from '@pnnh/atom'
-import styles from './table.module.scss'
+import './table.scss'
 import React from 'react'
-import Link from 'next/link'
 import {PLSelectResult} from '@pnnh/polaris-business'
 import {PSChannelModel} from "@pnnh/polaris-business";
-import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
 
 export function ChannelTable(props: { data: PLSelectResult<PSChannelModel> }) {
-    return <TableContainer>
-        <Table className={styles.Table} aria-label={'simple table'}>
-            <TableHead>
-                <TableRow>
-                    <TableCell className={styles.columnCheck}>
-                        <label>
-                            <input type="checkbox" className="checkbox"/>
-                        </label>
-                    </TableCell>
-                    <TableCell>标题</TableCell>
-                    <TableCell className={styles.columnTime}>修改时间</TableCell>
-                    <TableCell className={styles.columnOperator}>操作</TableCell>
-                </TableRow>
-            </TableHead>
-            <TableBody>
-                {
-                    props.data.range.map((item, index) => {
-                        return <ChannelTableRow key={index} model={item}/>
-                    })
-                }
+    return <div>
+        <table className={'Table'} aria-label={'simple table'}>
+            <thead>
+            <tr>
+                <th className={'columnCheck'}>
+                    <label>
+                        <input type="checkbox" className="checkbox"/>
+                    </label>
+                </th>
+                <th>标题</th>
+                <th className={'columnTime'}>修改时间</th>
+                <th className={'columnOperator'}>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {
+                props.data.range.map((item, index) => {
+                    return <ChannelTableRow key={index} model={item}/>
+                })
+            }
 
-            </TableBody>
+            </tbody>
             <tfoot>
             </tfoot>
 
-        </Table>
-    </TableContainer>
+        </table>
+    </div>
 }
 
 function ChannelTableRow(props: { model: PSChannelModel }) {
     const updateTimeString = formatRfc3339(props.model.update_time)
-    return <TableRow className={styles.Row}>
-        <TableCell>
+    return <tr className={'Row'}>
+        <td>
             <label>
                 <input type="checkbox" className="checkbox"/>
             </label>
-        </TableCell>
-        <TableCell>
-            <Link href={'/console/channel/update?pk=' + props.model.uid}
-                  title={props.model.name}>{props.model.name}</Link>
-        </TableCell>
-        <TableCell>
+        </td>
+        <td>
+            <a href={'/console/channel/update?pk=' + props.model.urn}
+               title={props.model.name}>{props.model.name}</a>
+        </td>
+        <td>
             {updateTimeString}
-        </TableCell>
-        <TableCell>
+        </td>
+        <td>
 
             <DeleteButton/>
 
-        </TableCell>
-    </TableRow>
+        </td>
+    </tr>
 }
 
 function DeleteButton() {

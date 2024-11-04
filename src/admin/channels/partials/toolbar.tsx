@@ -1,21 +1,18 @@
 'use client'
 
 import React from 'react'
-import {useRouter} from 'next/navigation'
-import styles from './toolbar.module.scss'
-import {Button} from "@mui/material";
+import './toolbar.scss'
 
 export function Toolbar() {
-    const router = useRouter()
-    return <div className={styles.toolbar}>
+    return <div className={'toolbar'}>
         <div>
-            <Button type={'button'}
+            <button type={'button'}
                     onClick={() => {
-                        router.replace('/console/channel/new')
+                        window.location.href = '/console/channel/new'
                     }}
             >
                 新建频道
-            </Button>
+            </button>
         </div>
     </div>
 }

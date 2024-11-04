@@ -1,8 +1,6 @@
 import React, {useState} from 'react'
-import styles from './edit.module.scss'
-import {NoteModel} from "@/models/personal/note";
-import {NoteContentView} from "@/components/console/note";
-import {Button, Input} from "@mui/material";
+import './edit.scss'
+import {NoteModel} from "@pnnh/polaris-business";
 
 export function MarkdownEditorForm(props: { model: NoteModel, onSubmit?: (model: NoteModel) => void }) {
     const model = props.model
@@ -10,9 +8,9 @@ export function MarkdownEditorForm(props: { model: NoteModel, onSubmit?: (model:
     const [title, setTitle] = useState<string>(model.title)
     const [content, setContent] = useState<string>(model.body)
 
-    return <div className={styles.editorForm}>
+    return <div className={'editorForm'}>
         <div>
-            <Input
+            <input
                 placeholder="文章标题"
                 value={title}
                 onChange={(event) => {
@@ -20,22 +18,22 @@ export function MarkdownEditorForm(props: { model: NoteModel, onSubmit?: (model:
                 }}
             />
         </div>
-        <div className={styles.editorRow}>
-            <div className={styles.textCol}>
+        <div className={'editorRow'}>
+            <div className={'textCol'}>
           <textarea
-              className={styles.textarea}
+              className={'textarea'}
               value={content}
               onChange={(e) => {
                   setContent(e.target.value)
               }}
           ></textarea>
             </div>
-            <div className={styles.previewCol}>
-                <NoteContentView header={model.header} content={content}/>
+            <div className={'previewCol'}>
+                {/*<NoteContentView header={model.header} content={content}/>*/}
             </div>
         </div>
         <div className={'mt-3'}>
-            <Button onClick={async () => {
+            <button onClick={async () => {
                 if (!onSubmit) {
                     return
                 }
@@ -46,7 +44,7 @@ export function MarkdownEditorForm(props: { model: NoteModel, onSubmit?: (model:
                 }
                 onSubmit(newModel)
             }}>保存文章
-            </Button>
+            </button>
         </div>
     </div>
 }
